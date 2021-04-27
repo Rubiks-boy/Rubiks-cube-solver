@@ -1,45 +1,59 @@
 from rubiks_cube import rubiks_cube as rc
 from copy import deepcopy as copy
 import pickle
-from helpers import hash_cube, turn_face, g1_moves
+from helpers import hash_cube, turn_face, g1_moves, wca_g1_moves
+
+from sys import getsizeof
 
 # How many moves to generate the pruning table up to
 max_moves = 8
+num_g1_moves = len(g1_moves)
+
+
+def move_to_WCA(move):
+    addition = {
+        0: '',
+        1: "'",
+        2: '2'
+    }
+    return move[0] + addition[move[1]]
 
 
 def make_domino_lookup_table():
     g1_sols = dict()
-    q = [(copy(rc.Cube()), [])]
+    q = [('', 0)]
 
     prev_prev_move_len = 0
-    i = 0
+    iter = 0
 
     while(len(q) > 0):
-        i = i+1
-        (cube, prev_moves) = q.pop(0)
+        iter = iter+1
+        (prev_moves, prev_move_len) = q.pop(0)
+        cube = rc.Cube()
+        cube.scramble(prev_moves)
 
         cube_hash = hash_cube(cube)
 
         if cube_hash not in g1_sols:
-            g1_sols[cube_hash] = len(prev_moves)
+            g1_sols[cube_hash] = prev_move_len
 
-            for move in g1_moves:
+            for i in range(num_g1_moves):
+                move = g1_moves[i]
                 next_cube = turn_face(cube, move)
-                q.append((next_cube, prev_moves + [move]))
 
-        prev_move_len = len(prev_moves)
+                if prev_move_len < max_moves:
+                    q.append(
+                        (f"{prev_moves} {wca_g1_moves[i]}", prev_move_len+1))
 
-        if i % 10000 == 0:
-            print(str(i) + " iterations in")
-        if prev_move_len > max_moves:
-            print("Finished after performing " + str(i) + " iterations")
-            return g1_sols
+        if iter % 10000 == 0:
+            print(f"{iter} iterations in")
 
         if prev_move_len > prev_prev_move_len:
             prev_prev_move_len = prev_move_len
-            print("Now generating table for " +
-                  str(prev_move_len) + " moves, " + str(i))
+            print(
+                f"Now generating table for {prev_move_len} moves, {iter} iters")
 
+    print(f"Finished after performing {iter} iterations")
     return g1_sols
 
 

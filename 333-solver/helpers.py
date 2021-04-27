@@ -27,6 +27,12 @@ g1_moves = [
     ('L', 2),
 ]
 
+wca_g1_moves = [
+    "U", "U'", "U2",
+    "D", "D'", "D2",
+    "F2", "R2", "B2", "L2"
+]
+
 
 def has_eo(cube):
     eo = cube.get_edges_orientation()
