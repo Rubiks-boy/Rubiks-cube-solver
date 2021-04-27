@@ -64,3 +64,5 @@ if __name__ == "__main__":
         "B2 L2 D2 R U2 R' F2 U2 F2 L B2 U' F2 L B2 F' D F2 D2 L2")
 
     solve_cube(test_cube)
+    # first solution it found:
+    # R2 U B' R' U R' L' R2 D' R' U2 R' U D R2 U2 R' U' R U L2 U R2 F2 U F2 D' F2 B2 D B2
