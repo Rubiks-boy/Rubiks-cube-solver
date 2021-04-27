@@ -14,6 +14,13 @@ valid_moves = [('U', 0), ('U', 1), ('U', 2),
                ('B', 0), ('B', 1), ('B', 2),
                ('L', 0), ('L', 1), ('L', 2)]
 
+eo_moves = [('U', 0), ('U', 1), ('U', 2),
+            ('F', 2),
+            ('R', 0), ('R', 1), ('R', 2),
+            ('D', 0), ('D', 1), ('D', 2),
+            ('B', 2),
+            ('L', 0), ('L', 1), ('L', 2)]
+
 g1_moves = [
     ('U', 0),
     ('U', 1),
@@ -36,8 +43,11 @@ wca_g1_moves = [
 
 def has_eo(cube):
     eo = cube.get_edges_orientation()
-    return not np.all(eo)
+    return not np.any(eo)
 
+def has_co(cube):
+    co = cube.get_corners_orientation()
+    return not np.any(co)
 
 def hash_cube(cube):
     pieces = cube.get_pieces()

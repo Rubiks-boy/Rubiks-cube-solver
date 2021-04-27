@@ -10,7 +10,7 @@ lookup_table = dict()
 def load_table():
     global lookup_table
     global table_loaded
-    with open('domino_lookup.pkl', 'rb') as file:
+    with open('domino_lookup6.pkl', 'rb') as file:
         lookup_table = pickle.load(file)
     table_loaded = True
 
@@ -56,6 +56,7 @@ def next_valid_g1_moves(prev_moves):
 
 
 def solve_from_domino(scr_cube):
+    ''' Solves the puzzle from a <U,D,L2,R2,F2,B2> group to solved '''
     if not table_loaded:
         load_table()
 
@@ -69,13 +70,12 @@ def solve_from_domino(scr_cube):
         hash_val = hash_cube(cube)
 
         if hash_val in lookup_table:
-            print("Num moves: " + str(len(prev_moves)) + "\t Iter: " + str(i))
+            print(f"Num moves: {len(prev_moves)}\t Iter: {i}")
             return prev_moves + recover_sol(cube)
 
         if num_moves < len(prev_moves):
             num_moves = len(prev_moves)
-            print("Now doing " + str(num_moves) +
-                  " moves, " + str(i) + " iters in")
+            print(f"Now doing {num_moves} moves, {str(i)} iters in")
 
         for move in next_valid_g1_moves(prev_moves):
             next_cube = turn_face(cube, move)
@@ -92,4 +92,18 @@ if __name__ == '__main__':
 
     test_cube.scramble(
         "D2 F2 D2 R2 B2 U2 F2 R2 L2 U2 F2 U2 B2 F2 L2 U2 B2 D2 B2 F2 U2")
+    print(solve_from_domino(test_cube))
+
+    test_cube = rc.Cube()
+    # Scramble
+    test_cube.scramble(
+        "B2 L2 D2 R U2 R' F2 U2 F2 L B2 U' F2 L B2 F' D F2 D2 L2")
+    # one EO solution generated
+    test_cube.scramble("U R2 B")
+    # solve top and bottom crosses
+    test_cube.scramble("L F2 D' R")
+    # solve CO
+    test_cube.scramble("U' R2 D2 R' U' L2 U2 D' R' D L2 U' R")
+
+    test_cube.print()
     print(solve_from_domino(test_cube))
