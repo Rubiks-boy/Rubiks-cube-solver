@@ -16,7 +16,7 @@ def run_overall_solver(scramble):
     (sol, movecount) = solve_cube(scr_cube)
     end = timeit.timeit()
 
-    logging.info((sol, movecount, end-start))
+    logging.info((scramble, sol, movecount, end-start))
 
 
 if __name__ == '__main__':
