@@ -10,15 +10,6 @@ max_moves = 8
 num_g1_moves = len(g1_moves)
 
 
-def move_to_WCA(move):
-    addition = {
-        0: '',
-        1: "'",
-        2: '2'
-    }
-    return move[0] + addition[move[1]]
-
-
 def make_domino_lookup_table():
     g1_sols = dict()
     q = [('', 0)]
