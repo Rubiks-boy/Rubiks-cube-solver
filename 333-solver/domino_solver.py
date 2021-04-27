@@ -55,7 +55,7 @@ def next_valid_g1_moves(prev_moves):
     return list(filter(lambda m: m[0] != last_face, g1_moves))
 
 
-def solve_from_domino(scr_cube):
+def solve_from_domino(scr_cube, max_depth=5):
     ''' Solves the puzzle from a <U,D,L2,R2,F2,B2> group to solved '''
     if not table_loaded:
         load_table()
@@ -65,7 +65,7 @@ def solve_from_domino(scr_cube):
     num_moves = 0
     i = 0
 
-    while(True):
+    while(len(cubes_queue) > 0):
         (cube, prev_moves) = cubes_queue.pop(0)
         hash_val = hash_cube(cube)
 
@@ -77,11 +77,14 @@ def solve_from_domino(scr_cube):
             num_moves = len(prev_moves)
             print(f"Now doing {num_moves} moves, {str(i)} iters in")
 
-        for move in next_valid_g1_moves(prev_moves):
-            next_cube = turn_face(cube, move)
-            cubes_queue.append((next_cube, prev_moves + [move]))
+        if len(prev_moves) < max_depth:
+            for move in next_valid_g1_moves(prev_moves):
+                next_cube = turn_face(cube, move)
+                cubes_queue.append((next_cube, prev_moves + [move]))
 
         i = i+1
+
+    return None
 
 
 if __name__ == '__main__':

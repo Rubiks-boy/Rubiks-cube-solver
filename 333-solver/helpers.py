@@ -45,9 +45,11 @@ def has_eo(cube):
     eo = cube.get_edges_orientation()
     return not np.any(eo)
 
+
 def has_co(cube):
     co = cube.get_corners_orientation()
     return not np.any(co)
+
 
 def hash_cube(cube):
     pieces = cube.get_pieces()
@@ -62,6 +64,19 @@ def turn_face(cube, move):
     (face, way) = move
     next_cube.turn_face(face, way)
     return next_cube
+
+
+def moves_to_wca(moves):
+    wca_alg = []
+    for (move, way) in moves:
+        if way == 0:
+            curr = move
+        elif way == 1:
+            curr = f"{move}'"
+        else:
+            curr = f"{move}2"
+        wca_alg.append(curr)
+    return " ".join(wca_alg)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 from copy import deepcopy as copy
 from rubiks_cube import rubiks_cube as rc
+import numpy as np
 from helpers import has_co, wca_g1_moves
 
 # Every possible Corner orientation can be solved using one of these algs
@@ -57,11 +58,19 @@ co_algs = [
     "L U D L' U2 D2 L U D L'"
 ]
 
+pows_3 = 3**np.arange(8, dtype=np.uint64)[::-1]
+
+alg_lookup = dict()
+
 parity_moves = []
 g1_plus_null = [""] + wca_g1_moves
 for m1 in g1_plus_null:
     for m2 in g1_plus_null:
-        for m3 in g1_plus_null:
+        if m1 == m2 and m1 != "":
+            continue
+        for m3 in ["F2", "R2", "B2", "L2"]:
+            if m2 == m3:
+                continue
             parity_moves.append(' '.join(filter(None, [m1, m2, m3])))
 
 
@@ -103,7 +112,14 @@ def solve_CO(cube):
             prealg_cube = copy(parity_cube)
             prealg_cube.scramble(pre_orient)
 
-            alg = test_co_algs(prealg_cube)
+            co_hash = hash(
+                np.dot(prealg_cube.get_corners_orientation(), pows_3))
+
+            if co_hash in alg_lookup:
+                alg = alg_lookup[co_hash]
+            else:
+                alg = test_co_algs(prealg_cube)
+                alg_lookup[co_hash] = alg
 
             if alg is not None:
                 movecount = get_movecount(f"{parity} {pre_orient} {alg}")

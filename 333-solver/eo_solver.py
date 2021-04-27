@@ -21,7 +21,7 @@ def next_valid_moves(prev_moves):
     return valid_moves[0:last_ind*3] + valid_moves[last_ind*3+3:]
 
 
-def solve_to_EO(scr_cube, max_moves=9001):
+def solve_to_EO(scr_cube, max_moves=9001, max_sols=25):
     ''' Solves into: <U,D,L,R,F2,B2> group '''
     cubes_queue = [(scr_cube, [])]
 
@@ -35,6 +35,10 @@ def solve_to_EO(scr_cube, max_moves=9001):
 
         if num_moves > max_moves:
             print(f"Reached maximum number of moves: {max_moves}")
+            return candidates
+
+        if len(candidates) > max_sols:
+            print(f"Reached maximum number of EO solutions: {max_sols}")
             return candidates
 
         if has_eo(cube):
@@ -58,4 +62,6 @@ if __name__ == '__main__':
 
     eo_sols = solve_to_EO(test_cube, max_moves=3)
     print(f"{len(eo_sols)} ways to solve EO in 3 moves")
+    eo_sols = solve_to_EO(test_cube, max_moves=4)
+    print(f"{len(eo_sols)}+ ways to solve EO in 4 moves")
     print(eo_sols[0])
