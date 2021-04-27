@@ -39,7 +39,8 @@ def solve_eq_edges(scr_cube, max_moves=9001):
         (cube, prev_moves) = cubes_queue.pop(0)
 
         if num_moves > max_moves:
-            print(f"Reached maximum number of moves: {max_moves}")
+            # print(f"Reached maximum number of moves: {max_moves}")
+            print()
             return candidates
 
         if has_eq_edges(cube):
@@ -47,7 +48,8 @@ def solve_eq_edges(scr_cube, max_moves=9001):
 
         if num_moves < len(prev_moves):
             num_moves = len(prev_moves)
-            print(f"Now doing {num_moves} moves, {i} iters")
+            # print(f"Now doing {num_moves} moves, {i} iters")
+            print('.', end='', flush=True)
 
         for move in next_valid_moves(prev_moves):
             next_cube = turn_face(cube, move)

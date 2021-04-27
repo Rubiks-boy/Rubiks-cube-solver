@@ -5,12 +5,13 @@ from helpers import g1_moves, hash_cube, turn_face
 
 table_loaded = False
 lookup_table = dict()
+table_depth = 8
 
 
 def load_table():
     global lookup_table
     global table_loaded
-    with open('domino_lookup6.pkl', 'rb') as file:
+    with open('domino_lookup8.pkl', 'rb') as file:
         lookup_table = pickle.load(file)
     table_loaded = True
 
@@ -55,7 +56,7 @@ def next_valid_g1_moves(prev_moves):
     return list(filter(lambda m: m[0] != last_face, g1_moves))
 
 
-def solve_from_domino(scr_cube, max_depth=5):
+def solve_from_domino(scr_cube, max_depth=14):
     ''' Solves the puzzle from a <U,D,L2,R2,F2,B2> group to solved '''
     if not table_loaded:
         load_table()
@@ -70,20 +71,23 @@ def solve_from_domino(scr_cube, max_depth=5):
         hash_val = hash_cube(cube)
 
         if hash_val in lookup_table:
-            print(f"Num moves: {len(prev_moves)}\t Iter: {i}")
+            # print(f"Num moves: {len(prev_moves)}\t Iter: {i}")
+            print()
             return prev_moves + recover_sol(cube)
 
         if num_moves < len(prev_moves):
             num_moves = len(prev_moves)
-            print(f"Now doing {num_moves} moves, {str(i)} iters in")
+            # print(f"Now doing {num_moves} moves, {str(i)} iters in")
+            print('.', end='', flush=True)
 
-        if len(prev_moves) < max_depth:
+        if len(prev_moves) + table_depth < max_depth:
             for move in next_valid_g1_moves(prev_moves):
                 next_cube = turn_face(cube, move)
                 cubes_queue.append((next_cube, prev_moves + [move]))
 
         i = i+1
 
+    print()
     return None
 
 

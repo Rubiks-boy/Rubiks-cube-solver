@@ -79,6 +79,11 @@ def moves_to_wca(moves):
     return " ".join(wca_alg)
 
 
+def get_wca_movecount(alg):
+    str_alg = copy(alg).replace(" ", "").replace("2", "").replace("'", "")
+    return len(str_alg)
+
+
 if __name__ == '__main__':
     cube = rc.Cube()
     print(hash_cube(cube))

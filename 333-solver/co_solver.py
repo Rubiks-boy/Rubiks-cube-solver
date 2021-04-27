@@ -1,7 +1,7 @@
 from copy import deepcopy as copy
 from rubiks_cube import rubiks_cube as rc
 import numpy as np
-from helpers import has_co, wca_g1_moves
+from helpers import has_co, wca_g1_moves, get_wca_movecount
 
 # Every possible Corner orientation can be solved using one of these algs
 # Pulled from EPOCLL section of: https://www.speedsolving.com/threads/lcbm-long-comeau-belt-method-guide-and-algorithms.30102/
@@ -81,14 +81,6 @@ orient_moves_for_alg = ["", "U", "U'", "U2",
                         "U D2", "U' D2", "U2 D2"]
 
 
-def get_movecount(alg):
-    str_alg = copy(alg)
-    str_alg.replace(" ", "")
-    str_alg.replace("2", "")
-    str_alg.replace("'", "")
-    return len(str_alg)
-
-
 def test_co_algs(prealg_cube):
     for alg in co_algs:
         candidate = copy(prealg_cube)
@@ -122,7 +114,7 @@ def solve_CO(cube):
                 alg_lookup[co_hash] = alg
 
             if alg is not None:
-                movecount = get_movecount(f"{parity} {pre_orient} {alg}")
+                movecount = get_wca_movecount(f"{parity} {pre_orient} {alg}")
 
                 if movecount < best_len:
                     best_len = movecount

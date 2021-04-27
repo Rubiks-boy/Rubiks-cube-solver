@@ -21,7 +21,7 @@ def next_valid_moves(prev_moves):
     return valid_moves[0:last_ind*3] + valid_moves[last_ind*3+3:]
 
 
-def solve_to_EO(scr_cube, max_moves=9001, max_sols=25):
+def solve_to_EO(scr_cube, max_moves=9001, max_sols=15):
     ''' Solves into: <U,D,L,R,F2,B2> group '''
     cubes_queue = [(scr_cube, [])]
 
@@ -35,10 +35,12 @@ def solve_to_EO(scr_cube, max_moves=9001, max_sols=25):
 
         if num_moves > max_moves:
             print(f"Reached maximum number of moves: {max_moves}")
+            print()
             return candidates
 
         if len(candidates) > max_sols:
-            print(f"Reached maximum number of EO solutions: {max_sols}")
+            # print(f"Reached maximum number of EO solutions: {max_sols}")
+            print()
             return candidates
 
         if has_eo(cube):
@@ -46,7 +48,8 @@ def solve_to_EO(scr_cube, max_moves=9001, max_sols=25):
 
         if num_moves < len(prev_moves):
             num_moves = len(prev_moves)
-            print(f"Now doing {num_moves} moves, {i} iters")
+            # print(f"Now doing {num_moves} moves, {i} iters")
+            print('.', end='', flush=True)
 
         for move in next_valid_moves(prev_moves):
             next_cube = turn_face(cube, move)
