@@ -1,4 +1,5 @@
 from rubiks_cube import rubiks_cube as rc
+from copy import deepcopy as copy
 from helpers import has_eo, valid_moves, turn_face, face_move_map
 
 
@@ -23,7 +24,7 @@ def next_valid_moves(prev_moves):
 
 def solve_to_EO(scr_cube, max_moves=9001, max_sols=15):
     ''' Solves into: <U,D,L,R,F2,B2> group '''
-    cubes_queue = [(scr_cube, [])]
+    cubes_queue = [[]]
 
     num_moves = 0
     i = 0
@@ -31,10 +32,13 @@ def solve_to_EO(scr_cube, max_moves=9001, max_sols=15):
     candidates = []
 
     while(True):
-        (cube, prev_moves) = cubes_queue.pop(0)
+        prev_moves = cubes_queue.pop(0)
+        cube = copy(scr_cube)
+        for (move, way) in prev_moves:
+            cube.turn_face(move, way)
 
         if num_moves > max_moves:
-            print(f"Reached maximum number of moves: {max_moves}")
+            # print(f"Reached maximum number of moves: {max_moves}")
             print()
             return candidates
 
@@ -53,7 +57,7 @@ def solve_to_EO(scr_cube, max_moves=9001, max_sols=15):
 
         for move in next_valid_moves(prev_moves):
             next_cube = turn_face(cube, move)
-            cubes_queue.append((next_cube, prev_moves + [move]))
+            cubes_queue.append(prev_moves + [move])
 
         i = i+1
 
@@ -62,6 +66,8 @@ if __name__ == '__main__':
     test_cube = rc.Cube()
     test_cube.scramble(
         "B2 L2 D2 R U2 R' F2 U2 F2 L B2 U' F2 L B2 F' D F2 D2 L2")
+    # test_cube.scramble(
+    #     "B' R' U B2 R2 B L2 U2 F2 D2 F2 U2 L2 U' L' D2 F' L D' B'")
 
     eo_sols = solve_to_EO(test_cube, max_moves=3)
     print(f"{len(eo_sols)} ways to solve EO in 3 moves")
